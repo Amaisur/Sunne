@@ -1,0 +1,22 @@
+{#
+    Shared link-resolution helper.
+
+    Every link in ContentConfig.php can carry an optional "categoryId". When
+    it is set, the link resolves to the real, language- and shop-aware
+    PlentyONE category URL (services.category / services.category.getURL -
+    the same services Ceres' own Footer.twig uses). Otherwise it falls back
+    to the static "url" placeholder so content editors can wire up real
+    categories later without touching any template.
+#}
+{% macro linkUrl(link) %}
+    {%- if link.categoryId is defined and link.categoryId -%}
+        {%- set resolvedCategory = services.category.get(link.categoryId, lang) -%}
+        {%- if resolvedCategory is not null -%}
+            {{- services.category.getURL(resolvedCategory) -}}
+        {%- else -%}
+            {{- link.url|default('#') -}}
+        {%- endif -%}
+    {%- else -%}
+        {{- link.url|default('#') -}}
+    {%- endif -%}
+{% endmacro %}

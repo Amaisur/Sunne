@@ -1,0 +1,88 @@
+// NovaTheme design tokens.
+// Every visual constant lives here as a CSS custom property so the client
+// can restyle the whole theme (colours, spacing, timing) by editing one
+// file, without touching component SCSS.
+
+:root {
+    // Layout
+    --nova-container-width: 1440px;
+    --nova-gutter: 24px;
+    --nova-header-height: 88px;
+    --nova-header-height-scrolled: 64px;
+    --nova-radius-sm: 4px;
+    --nova-radius-md: 8px;
+    --nova-radius-lg: 16px;
+
+    // Spacing scale
+    --nova-space-xs: 8px;
+    --nova-space-sm: 16px;
+    --nova-space-md: 24px;
+    --nova-space-lg: 48px;
+    --nova-space-xl: 80px;
+    --nova-space-2xl: 120px;
+
+    // Typography
+    --nova-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --nova-font-size-display: clamp(2.25rem, 1.6rem + 2.6vw, 4rem);
+    --nova-font-size-h2: clamp(1.75rem, 1.45rem + 1.2vw, 2.5rem);
+    --nova-font-size-h3: 1.25rem;
+    --nova-font-size-body: 1rem;
+    --nova-font-size-small: 0.8125rem;
+    --nova-line-height-heading: 1.15;
+    --nova-line-height-body: 1.6;
+
+    // Colours - neutral, brand-agnostic palette; swap for client brand colours
+    --nova-color-bg: #ffffff;
+    --nova-color-bg-alt: #f6f7f8;
+    --nova-color-text: #1a1d21;
+    --nova-color-text-muted: #5b6470;
+    --nova-color-border: #e4e7eb;
+    --nova-color-accent: #d6540d;
+    --nova-color-accent-dark: #b8460a;
+    --nova-color-dark-bg: #14171a;
+    --nova-color-dark-text: #f2f3f4;
+    --nova-color-dark-text-muted: #a7adb4;
+    --nova-color-focus: #2f6fed;
+
+    // Motion
+    --nova-transition-fast: 150ms ease;
+    --nova-transition-base: 220ms ease;
+    --nova-transition-slow: 400ms cubic-bezier(0.22, 1, 0.36, 1);
+
+    // Z-index layers
+    --nova-z-header: 1000;
+    --nova-z-mega-menu: 1010;
+    --nova-z-mobile-drawer: 1050;
+    --nova-z-modal: 1100;
+    --nova-z-floating-actions: 900;
+    --nova-z-tooltip: 1200;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --nova-transition-fast: 1ms;
+        --nova-transition-base: 1ms;
+        --nova-transition-slow: 1ms;
+    }
+}
+
+// SCSS-side breakpoint map, mirrors the brief's approximate breakpoints.
+$nova-breakpoints: (
+    xxl: 1440px,
+    xl: 1200px,
+    lg: 992px,
+    md: 768px,
+    sm: 480px
+);
+
+@mixin nova-below($name) {
+    @media (max-width: map-get($nova-breakpoints, $name)) {
+        @content;
+    }
+}
+
+@mixin nova-above($name) {
+    @media (min-width: (map-get($nova-breakpoints, $name) + 1px)) {
+        @content;
+    }
+}

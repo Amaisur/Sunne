@@ -1,0 +1,181 @@
+// Footer: group branding row, link columns (accordion on mobile), social
+// links, legal row. js/modules/footer-accordion.js drives the mobile
+// accordion toggles.
+
+.nova-footer {
+    background-color: var(--nova-color-dark-bg);
+    color: var(--nova-color-dark-text-muted);
+    padding-top: var(--nova-space-xl);
+}
+
+.nova-footer__group {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: var(--nova-space-lg);
+    margin-bottom: var(--nova-space-lg);
+}
+
+.nova-footer__group-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-space-sm);
+    text-align: center;
+}
+
+.nova-footer__group-label {
+    font-size: var(--nova-font-size-small);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--nova-color-dark-text-muted);
+}
+
+.nova-footer__group-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--nova-space-lg);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nova-footer__group-logos img {
+    height: 32px;
+    width: auto;
+    filter: grayscale(1) brightness(2);
+    opacity: 0.75;
+    transition: opacity var(--nova-transition-fast);
+}
+
+.nova-footer__group-logos a:hover img {
+    opacity: 1;
+}
+
+.nova-footer__columns {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.nova-footer__column {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nova-footer__column-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: 0;
+    color: var(--nova-color-dark-text);
+    font-weight: 700;
+    padding: var(--nova-space-sm) 0;
+    cursor: pointer;
+}
+
+.nova-footer__column-toggle .nova-icon--chevron {
+    transition: transform var(--nova-transition-base);
+}
+
+.nova-footer__column[data-open] .nova-icon--chevron {
+    transform: rotate(180deg);
+}
+
+.nova-footer__column-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 var(--nova-space-sm);
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nova-footer__column[data-open] .nova-footer__column-list {
+    display: flex;
+}
+
+.nova-footer__column-list a {
+    color: var(--nova-color-dark-text-muted);
+    text-decoration: none;
+    font-size: 0.9375rem;
+}
+
+.nova-footer__column-list a:hover {
+    color: #fff;
+}
+
+.nova-footer__social {
+    display: flex;
+    justify-content: center;
+    gap: var(--nova-space-sm);
+    list-style: none;
+    margin: var(--nova-space-lg) 0 0;
+    padding: 0;
+}
+
+.nova-footer__social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+}
+
+.nova-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 4px;
+    text-align: center;
+    margin-top: var(--nova-space-lg);
+    padding-top: var(--nova-space-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nova-footer__legal a {
+    color: var(--nova-color-dark-text-muted);
+    text-decoration: none;
+    font-size: var(--nova-font-size-small);
+    padding: 8px;
+}
+
+.nova-footer__legal a:hover {
+    color: #fff;
+}
+
+.nova-footer__copyright {
+    text-align: center;
+    font-size: var(--nova-font-size-small);
+    padding-block: var(--nova-space-md);
+    margin: 0;
+}
+
+@include nova-above(md) {
+    .nova-footer__group-inner {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+
+    .nova-footer__columns {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--nova-space-md);
+    }
+
+    .nova-footer__column-toggle {
+        cursor: default;
+        pointer-events: none;
+    }
+
+    .nova-footer__column-toggle .nova-icon--chevron {
+        display: none;
+    }
+
+    .nova-footer__column-list {
+        display: flex !important;
+    }
+}

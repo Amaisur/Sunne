@@ -1,0 +1,72 @@
+{% import "NovaTheme::macros.Helpers" as Helpers %}
+
+{#
+    Wide "Products" mega menu panel.
+    Rendered once per navigation item of type "megamenu" (see
+    partials/Header.twig). Controlled entirely by js/modules/mega-menu.js:
+    opens on hover + focus, stays open while the pointer is inside it,
+    closes on Escape / outside click, and becomes independently scrollable
+    when taller than the viewport.
+#}
+<div class="nova-mega"
+     id="{{ panelId }}"
+     data-nova-mega-panel
+     role="menu"
+     aria-hidden="true">
+    <div class="nova-container">
+        <div class="nova-mega__inner">
+            <div class="nova-mega__groups">
+                {% for group in menu.groups %}
+                    <div class="nova-mega__group">
+                        <div class="nova-mega__group-head">
+                            <h3 class="nova-mega__group-title">{{ group.title }}</h3>
+                            {% if group.subtitle %}
+                                <p class="nova-mega__group-subtitle">{{ group.subtitle }}</p>
+                            {% endif %}
+                        </div>
+
+                        {% for category in group.categories %}
+                            <div class="nova-mega__category">
+                                <h4 class="nova-mega__category-heading">{{ category.heading }}</h4>
+                                <ul class="nova-mega__link-list">
+                                    {% for link in category.links %}
+                                        <li>
+                                            <a role="menuitem" class="nova-mega__link" href="{{ Helpers.linkUrl(link) }}">
+                                                {{ link.label }}
+                                                {% if link.isNew %}<span class="nova-badge nova-badge--new">New</span>{% endif %}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+
+                        {% if group.highlightLink %}
+                            <a role="menuitem" class="nova-mega__highlight" href="{{ Helpers.linkUrl(group.highlightLink) }}">
+                                {{ group.highlightLink.label }}
+                                <svg class="nova-icon nova-icon--arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                            </a>
+                        {% endif %}
+
+                        {% if group.image %}
+                            <div class="nova-mega__group-image">
+                                <img src="{{ plugin_path('NovaTheme') }}/images/{{ group.image }}"
+                                     width="360" height="240"
+                                     loading="lazy"
+                                     alt="{{ group.imageAlt|default('') }}">
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if menu.quickLinks %}
+                <div class="nova-mega__quick-links">
+                    {% for link in menu.quickLinks %}
+                        <a role="menuitem" class="nova-mega__quick-link" href="{{ Helpers.linkUrl(link) }}">{{ link.label }}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

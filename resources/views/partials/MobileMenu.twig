@@ -1,0 +1,153 @@
+{% import "NovaTheme::macros.Helpers" as Helpers %}
+
+{#
+    Full-height mobile navigation drawer. Purpose-built for this nav
+    structure (nested "panel stack" accordion with back navigation) rather
+    than a shrunk copy of the desktop mega menu. Behaviour lives in
+    js/modules/mobile-nav.js: body scroll lock, Escape close, overlay
+    close, focus trap, and panel push/pop transitions.
+
+    Note: Ceres also renders its own <mobile-navigation> Vue component
+    elsewhere in the header partial chain, but nothing in this drawer
+    triggers the Vuex action that opens it, so the two never collide.
+#}
+<div class="nova-mobile" data-nova-mobile-drawer aria-hidden="true">
+    <div class="nova-mobile__overlay" data-nova-mobile-overlay></div>
+
+    <div class="nova-mobile__panel-wrap" role="dialog" aria-modal="true" aria-label="Mobile navigation" id="nova-mobile-drawer">
+        <div class="nova-mobile__head">
+            <a href="/" class="nova-mobile__logo" aria-label="{{ webstoreConfig.storeName|default('Homepage') }}">
+                <img src="{{ plugin_path('NovaTheme') }}/images/logo/logo-placeholder.svg" width="120" height="30" alt="{{ webstoreConfig.storeName|default('Company logo') }} placeholder logo">
+            </a>
+            <button type="button" class="nova-mobile__close" data-nova-mobile-close aria-label="{{ trans('NovaTheme::NovaTheme.mobileMenuClose') }}">
+                <svg class="nova-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+
+        <div class="nova-mobile__panels" data-nova-mobile-panels>
+
+            {# ---------- Root panel ---------- #}
+            <div class="nova-mobile__panel" data-mobile-panel="root" data-panel-active>
+                <ul class="nova-mobile__list">
+                    {% for item in navigation %}
+                        <li class="nova-mobile__item">
+                            {% if item.type == 'megamenu' %}
+                                <button type="button" class="nova-mobile__row" data-open-panel="mega-{{ item.key }}">
+                                    <span>{{ item.label }}</span>
+                                    <svg class="nova-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                                </button>
+                            {% elseif item.type == 'dropdown' %}
+                                <button type="button" class="nova-mobile__row" data-open-panel="drop-{{ item.key }}">
+                                    <span>{{ item.label }}</span>
+                                    <svg class="nova-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                                </button>
+                            {% else %}
+                                <a class="nova-mobile__row" href="{{ Helpers.linkUrl(item) }}">{{ item.label }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="nova-mobile__foot">
+                    <button type="button" class="nova-mobile__row" data-open-panel="language">
+                        <span><i class="flag-icon flag-icon-{{ lang }}" aria-hidden="true"></i> {{ trans("Ceres::Template.header" ~ lang|capitalize) }}</span>
+                        <svg class="nova-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            {# ---------- Dropdown sub-panels (About Us / Support / ...) ---------- #}
+            {% for item in navigation if item.type == 'dropdown' %}
+                <div class="nova-mobile__panel" data-mobile-panel="drop-{{ item.key }}">
+                    <button type="button" class="nova-mobile__back" data-back-panel>
+                        <svg class="nova-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 4l-4 4 4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                        {{ item.label }}
+                    </button>
+                    <ul class="nova-mobile__list">
+                        {% for child in item.children %}
+                            <li class="nova-mobile__item">
+                                <a class="nova-mobile__row" href="{{ Helpers.linkUrl(child) }}">{{ child.label }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+
+            {# ---------- Products mega menu, level 1: groups ---------- #}
+            {% for item in navigation if item.type == 'megamenu' %}
+                <div class="nova-mobile__panel" data-mobile-panel="mega-{{ item.key }}">
+                    <button type="button" class="nova-mobile__back" data-back-panel>
+                        <svg class="nova-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 4l-4 4 4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                        {{ item.label }}
+                    </button>
+                    <ul class="nova-mobile__list">
+                        {% for group in megaMenu.groups %}
+                            <li class="nova-mobile__item">
+                                <button type="button" class="nova-mobile__row" data-open-panel="mega-{{ item.key }}-{{ group.key }}">
+                                    <span>{{ group.title }}</span>
+                                    <svg class="nova-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% if megaMenu.quickLinks %}
+                        <div class="nova-mobile__foot nova-mobile__foot--links">
+                            {% for link in megaMenu.quickLinks %}
+                                <a class="nova-mobile__quick-link" href="{{ Helpers.linkUrl(link) }}">{{ link.label }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# ---------- Products mega menu, level 2: one panel per group ---------- #}
+                {% for group in megaMenu.groups %}
+                    <div class="nova-mobile__panel" data-mobile-panel="mega-{{ item.key }}-{{ group.key }}">
+                        <button type="button" class="nova-mobile__back" data-back-panel>
+                            <svg class="nova-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 4l-4 4 4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                            {{ group.title }}
+                        </button>
+                        {% for category in group.categories %}
+                            <p class="nova-mobile__group-heading">{{ category.heading }}</p>
+                            <ul class="nova-mobile__list">
+                                {% for link in category.links %}
+                                    <li class="nova-mobile__item">
+                                        <a class="nova-mobile__row" href="{{ Helpers.linkUrl(link) }}">
+                                            {{ link.label }}
+                                            {% if link.isNew %}<span class="nova-badge nova-badge--new">New</span>{% endif %}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endfor %}
+                        {% if group.highlightLink %}
+                            <a class="nova-mobile__highlight" href="{{ Helpers.linkUrl(group.highlightLink) }}">{{ group.highlightLink.label }}</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {# ---------- Language sub-panel ---------- #}
+            <div class="nova-mobile__panel" data-mobile-panel="language">
+                <button type="button" class="nova-mobile__back" data-back-panel>
+                    <svg class="nova-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 4l-4 4 4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                    {{ trans('Ceres::Template.headerSelectLanguage') }}
+                </button>
+                <ul class="nova-mobile__list">
+                    {% set languageList = services.webstoreConfigurationRepository.getActiveLanguageList() %}
+                    {% set languageUrls = services.url.getLanguageURLs() %}
+                    {% for language in languageList %}
+                        {% set languageISO = services.localizationRepository.getLanguageCode(language) %}
+                        <li class="nova-mobile__item">
+                            <a class="nova-mobile__row{% if lang == language %} is-active{% endif %}"
+                               href="{% if languageUrls[languageISO] is defined %}{{ languageUrls[languageISO] ~ queryString() }}{% elseif language != webstoreConfig.defaultLanguage %}/{{ language }}{{ urls.trailingSlashSuffix }}{% else %}/{% endif %}"
+                               data-update-url>
+                                <i class="flag-icon flag-icon-{{ language }}" aria-hidden="true"></i>
+                                {{ trans("Ceres::Template.header" ~ language|capitalize) }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,135 @@
+// Accessible contact modal. js/modules/contact-modal.js handles the open
+// state, focus trap, validation and loading/success swaps.
+
+.nova-modal {
+    position: fixed;
+    inset: 0;
+    z-index: var(--nova-z-modal);
+    visibility: hidden;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--nova-space-md);
+}
+
+.nova-modal[data-nova-open] {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.nova-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(10, 12, 14, 0.55);
+    opacity: 0;
+    transition: opacity var(--nova-transition-base);
+}
+
+.nova-modal[data-nova-open] .nova-modal__overlay {
+    opacity: 1;
+}
+
+.nova-modal__dialog {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: var(--nova-color-bg);
+    color: var(--nova-color-text);
+    border-radius: var(--nova-radius-lg);
+    padding: var(--nova-space-lg);
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+    transition: opacity var(--nova-transition-base), transform var(--nova-transition-base);
+}
+
+.nova-modal[data-nova-open] .nova-modal__dialog {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.nova-modal__close {
+    position: absolute;
+    top: var(--nova-space-sm);
+    right: var(--nova-space-sm);
+    background: none;
+    border: 0;
+    padding: 6px;
+    cursor: pointer;
+    color: var(--nova-color-text-muted);
+}
+
+.nova-modal__title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    margin: 0 0 var(--nova-space-md);
+}
+
+.nova-form__field {
+    margin-bottom: var(--nova-space-sm);
+}
+
+.nova-form__label {
+    display: block;
+    font-size: var(--nova-font-size-small);
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.nova-form__input {
+    width: 100%;
+    font: inherit;
+    padding: 10px 12px;
+    border: 1px solid var(--nova-color-border);
+    border-radius: var(--nova-radius-sm);
+    background-color: var(--nova-color-bg);
+    color: var(--nova-color-text);
+}
+
+.nova-form__field.has-error .nova-form__input {
+    border-color: #c0392b;
+}
+
+.nova-form__error {
+    color: #c0392b;
+    font-size: var(--nova-font-size-small);
+    margin: 6px 0 0;
+}
+
+.nova-form__submit {
+    width: 100%;
+    margin-top: var(--nova-space-xs);
+    position: relative;
+}
+
+.nova-form__spinner {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-top-color: #fff;
+    animation: nova-spin 700ms linear infinite;
+}
+
+.nova-form[data-loading] .nova-form__spinner {
+    display: inline-block;
+}
+
+.nova-form[data-loading] .nova-form__submit {
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.nova-form__success {
+    text-align: center;
+    padding: var(--nova-space-md) 0;
+}
+
+@keyframes nova-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

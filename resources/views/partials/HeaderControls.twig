@@ -1,0 +1,79 @@
+{% import "Ceres::PageDesign.Macros.LayoutContainer" as LayoutContainer %}
+{% set visibleFields = ceresConfig.basket.previewData %}
+{% set currencyFormat = config("Ceres.currency.format") %}
+
+{#
+    Search / account / wishlist / cart controls.
+    These reuse the exact same Vue components and directives as Ceres'
+    default header (Ceres/PageDesign/Partials/Header/DefaultHeader.twig) so
+    basket state, customer login state and search suggestions keep working
+    without any custom re-implementation.
+#}
+<div class="nova-header__controls">
+    <ul class="nova-controls">
+        <li class="nova-controls__item nova-controls__item--search">
+            <a class="nova-controls__link"
+               data-toggle="collapse"
+               href="#searchBox"
+               aria-expanded="false"
+               aria-controls="searchBox"
+               aria-label="{{ trans('Ceres::Template.headerSearch') }}"
+               @mouseover.once="$store.dispatch('loadComponent', 'item-search')">
+                <svg class="nova-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </a>
+        </li>
+
+        <li class="nova-controls__item">
+            <client-only>
+                <user-login-handler>
+                    <a class="nova-controls__link" data-toggle="modal" aria-label="{{ trans('Ceres::Template.login') }}">
+                        <svg class="nova-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                    </a>
+                    <a class="nova-controls__link" data-toggle="modal" aria-label="{{ trans('Ceres::Template.loginRegister') }}">
+                        <svg class="nova-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                    </a>
+                </user-login-handler>
+            </client-only>
+        </li>
+
+        {% if services.url.isRouteEnabled("wish-list") %}
+            <li class="nova-controls__item">
+                <lazy-hydrate when-idle>
+                    <wish-list-count>
+                        <a class="nova-controls__link" aria-label="{{ trans('Ceres::Template.wishList') }}">
+                            <svg class="nova-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-9.3-9A5 5 0 0 1 12 6a5 5 0 0 1 9.3 5c-2.3 4.6-9.3 9-9.3 9z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                            <span class="nova-controls__badge" v-if="$store.state.wishList && $store.state.wishList.data && $store.state.wishList.data.length">0</span>
+                        </a>
+                    </wish-list-count>
+                </lazy-hydrate>
+            </li>
+        {% endif %}
+
+        <li class="nova-controls__item nova-controls__item--basket position-relative">
+            <a v-toggle-basket-preview href="#" class="nova-controls__link nova-controls__link--basket toggle-basket-preview" {{ set_testing_attr("data-testing", "basket-preview-button") }}>
+                <svg class="nova-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16l-1.5 11a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8L4 8z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 8V6a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                <span class="nova-controls__badge" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
+            </a>
+
+            <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="{{ showNetPrices | json_encode }}" :visible-fields="{{ visibleFields | json_encode }}">
+                <template #before-basket-item>{{ LayoutContainer.show("Ceres::BasketList.BeforeItem") }}</template>
+                <template #after-basket-item>{{ LayoutContainer.show("Ceres::BasketList.AfterItem") }}</template>
+                <template #before-basket-totals>{{ LayoutContainer.show("Ceres::BasketPreview.BeforeBasketTotals") }}</template>
+                <template #after-basket-totals>{{ LayoutContainer.show("Ceres::BasketPreview.AfterBasketTotals") }}</template>
+                <template #before-checkout-button>{{ LayoutContainer.show("Ceres::BasketPreview.BeforeCheckoutButton") }}</template>
+                <template #after-checkout-button>{{ LayoutContainer.show("Ceres::BasketPreview.AfterCheckoutButton") }}</template>
+            </basket-preview>
+        </li>
+    </ul>
+</div>
+
+<div id="searchBox" class="nova-searchbox collapse">
+    {% set overrideSearchBar = LayoutContainer.show("Ceres::Search.SearchBar") %}
+    {% if overrideSearchBar|trim is empty %}
+        <lazy-load component="item-search">
+            <item-search></item-search>
+        </lazy-load>
+    {% else %}
+        {{ overrideSearchBar|raw }}
+    {% endif %}
+</div>

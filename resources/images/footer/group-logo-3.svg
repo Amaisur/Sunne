@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="96" viewBox="0 0 280 96">
+  <rect width="280" height="96" fill="none"/>
+  <rect x="1" y="1" width="278" height="94" rx="8" fill="none" stroke="#5b6470" stroke-width="2" stroke-dasharray="6 6"/>
+  <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#f2f3f4">BRAND 3</text>
+</svg>

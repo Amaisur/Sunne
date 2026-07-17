@@ -1,0 +1,116 @@
+{% import "NovaTheme::macros.Helpers" as Helpers %}
+{% import "Ceres::PageDesign.Macros.LayoutContainer" as LayoutContainer %}
+
+{#
+    Custom NovaTheme header, injected into the "Ceres::Header" container
+    (see src/Providers/HeaderProvider.php). Ceres/PageDesign/Partials/
+    Header/Header.twig wraps whatever this renders inside <header
+    id="page-header"> for us, so we only render the inner bar here.
+
+    Cart, login and search controls below reuse Ceres' own Vue components
+    (user-login-handler, wish-list-count, basket-preview, item-search) and
+    the same directives/markup Ceres' DefaultHeader.twig uses, so basket
+    state, customer state and search stay fully wired to the real shop -
+    nothing here re-implements commerce logic.
+#}
+<div class="nova-header" data-nova-header>
+    <a class="nova-header__skip-link" href="#nova-main-content">{{ trans('NovaTheme::NovaTheme.skipToMainContent') }}</a>
+
+    <div class="nova-header__topbar">
+        <div class="nova-container">
+            <div class="nova-header__topbar-inner">
+                <div class="nova-header__lang" data-nova-dropdown>
+                    <button type="button"
+                            class="nova-header__lang-toggle"
+                            data-nova-dropdown-trigger
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-controls="nova-lang-panel">
+                        <i class="flag-icon flag-icon-{{ lang }}" aria-hidden="true"></i>
+                        <span>{{ trans("Ceres::Template.header" ~ lang|capitalize) }}</span>
+                        <svg class="nova-icon nova-icon--chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                    </button>
+                    <div class="nova-header__lang-panel" id="nova-lang-panel" data-nova-dropdown-panel role="menu">
+                        {% set languageList = services.webstoreConfigurationRepository.getActiveLanguageList() %}
+                        {% set languageUrls = services.url.getLanguageURLs() %}
+                        {% for language in languageList %}
+                            {% set languageISO = services.localizationRepository.getLanguageCode(language) %}
+                            <a role="menuitem"
+                               class="nova-header__lang-option{% if lang == language %} is-active{% endif %}"
+                               href="{% if languageUrls[languageISO] is defined %}{{ languageUrls[languageISO] ~ queryString() }}{% elseif language != webstoreConfig.defaultLanguage %}/{{ language }}{{ urls.trailingSlashSuffix }}{% else %}/{% endif %}"
+                               data-update-url>
+                                <i class="flag-icon flag-icon-{{ language }}" aria-hidden="true"></i>
+                                {{ trans("Ceres::Template.header" ~ language|capitalize) }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {{ LayoutContainer.show("Ceres::Header.LeftSide") }}
+            </div>
+        </div>
+    </div>
+
+    <div class="nova-header__main">
+        <div class="nova-container nova-header__main-inner">
+            <a href="/" class="nova-header__logo" aria-label="{{ webstoreConfig.storeName|default('Homepage') }}">
+                {# Placeholder logo - swap for the client's real logo asset. See resources/images/README.md #}
+                <img src="{{ plugin_path('NovaTheme') }}/images/logo/logo-placeholder.svg"
+                     width="148" height="36"
+                     alt="{{ webstoreConfig.storeName|default('Company logo') }} placeholder logo"
+                     class="nova-header__logo-img">
+            </a>
+
+            <nav class="nova-nav" aria-label="Main navigation" data-nova-desktop-nav>
+                <ul class="nova-nav__list">
+                    {% for item in navigation %}
+                        <li class="nova-nav__item{% if item.type == 'megamenu' %} nova-nav__item--mega{% elseif item.type == 'dropdown' %} nova-nav__item--dropdown{% endif %}"
+                            {% if item.type != 'link' %}data-nova-nav-item{% endif %}>
+
+                            {% if item.type == 'megamenu' %}
+                                <button type="button"
+                                        class="nova-nav__link"
+                                        data-nova-mega-trigger
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                        aria-controls="nova-mega-panel-{{ item.key }}">
+                                    {{ item.label }}
+                                    <svg class="nova-icon nova-icon--chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                                </button>
+                                {% include "NovaTheme::partials.MegaMenu" with { 'panelId': 'nova-mega-panel-' ~ item.key, 'menu': megaMenu } only %}
+
+                            {% elseif item.type == 'dropdown' %}
+                                <button type="button"
+                                        class="nova-nav__link"
+                                        data-nova-dropdown-trigger
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                        aria-controls="nova-drop-panel-{{ item.key }}">
+                                    {{ item.label }}
+                                    <svg class="nova-icon nova-icon--chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                                </button>
+                                <div class="nova-dropdown-panel" id="nova-drop-panel-{{ item.key }}" data-nova-dropdown-panel role="menu">
+                                    <ul class="nova-dropdown-panel__list">
+                                        {% for child in item.children %}
+                                            <li role="none"><a role="menuitem" class="nova-dropdown-panel__link" href="{{ Helpers.linkUrl(child) }}">{{ child.label }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
+                            {% else %}
+                                <a class="nova-nav__link" href="{{ Helpers.linkUrl(item) }}">{{ item.label }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+
+            {% include "NovaTheme::partials.HeaderControls" %}
+
+            <button type="button" class="nova-header__burger" data-nova-mobile-trigger aria-haspopup="true" aria-expanded="false" aria-controls="nova-mobile-drawer" aria-label="{{ trans('NovaTheme::NovaTheme.mobileMenuOpen') }}">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+{% include "NovaTheme::partials.MobileMenu" %}

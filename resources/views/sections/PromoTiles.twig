@@ -1,0 +1,29 @@
+{% import "NovaTheme::macros.Helpers" as Helpers %}
+
+{#
+    Two large promotional tiles, side-by-side on desktop and stacked on
+    mobile. Hover zoom + overlay handled purely in CSS (see _promo.scss).
+#}
+<section class="nova-promo" aria-label="Featured promotions">
+    <div class="nova-container">
+        <div class="nova-promo__grid">
+            {% for card in promoCards %}
+                <a class="nova-promo__card nova-promo__card--{{ card.align|default('left') }}" href="{{ Helpers.linkUrl(card) }}" data-nova-reveal>
+                    <picture class="nova-promo__media">
+                        <source media="(max-width: 767px)" srcset="{{ plugin_path('NovaTheme') }}/images/{{ card.imageMobile }}">
+                        <img src="{{ plugin_path('NovaTheme') }}/images/{{ card.imageDesktop }}"
+                             alt="{{ card.imageAlt|default('') }}"
+                             width="960" height="640"
+                             loading="lazy" decoding="async"
+                             class="nova-promo__img">
+                    </picture>
+                    <div class="nova-promo__overlay"></div>
+                    <div class="nova-promo__copy">
+                        {% if card.label %}<span class="nova-label">{{ card.label }}</span>{% endif %}
+                        <h2 class="nova-promo__heading">{{ card.heading }}</h2>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>

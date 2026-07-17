@@ -1,0 +1,138 @@
+// Wide "Products" mega menu panel.
+// Opened/closed by js/modules/mega-menu.js which toggles [data-nova-open]
+// on the trigger's parent <li> and aria-hidden on the panel itself.
+
+.nova-mega {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--nova-color-bg);
+    color: var(--nova-color-text);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.16);
+    border-top: 1px solid var(--nova-color-border);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity var(--nova-transition-base), transform var(--nova-transition-base), visibility var(--nova-transition-base);
+    z-index: var(--nova-z-mega-menu);
+    max-height: min(560px, calc(100vh - var(--nova-header-height-scrolled)));
+    overflow-y: auto;
+}
+
+.nova-nav__item--mega[data-nova-open] .nova-mega {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nova-mega__inner {
+    padding-block: var(--nova-space-lg);
+}
+
+.nova-mega__groups {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--nova-space-lg);
+}
+
+.nova-mega__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-sm);
+}
+
+.nova-mega__group-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 2px;
+}
+
+.nova-mega__group-subtitle {
+    font-size: var(--nova-font-size-small);
+    color: var(--nova-color-text-muted);
+    margin: 0 0 var(--nova-space-xs);
+}
+
+.nova-mega__category-heading {
+    font-size: var(--nova-font-size-small);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--nova-color-text-muted);
+    margin: var(--nova-space-xs) 0 4px;
+}
+
+.nova-mega__link-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nova-mega__link {
+    color: var(--nova-color-text);
+    text-decoration: none;
+    font-size: 0.9375rem;
+}
+
+.nova-mega__link:hover {
+    color: var(--nova-color-accent);
+    text-decoration: underline;
+}
+
+.nova-mega__highlight {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    font-weight: 600;
+    color: var(--nova-color-accent);
+    text-decoration: none;
+}
+
+.nova-mega__group-image {
+    margin-top: var(--nova-space-xs);
+    border-radius: var(--nova-radius-md);
+    overflow: hidden;
+}
+
+.nova-mega__group-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform var(--nova-transition-slow);
+}
+
+.nova-mega__group:hover .nova-mega__group-image img {
+    transform: scale(1.04);
+}
+
+.nova-mega__quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nova-space-md);
+    margin-top: var(--nova-space-lg);
+    padding-top: var(--nova-space-sm);
+    border-top: 1px solid var(--nova-color-border);
+}
+
+.nova-mega__quick-link {
+    font-size: var(--nova-font-size-small);
+    font-weight: 600;
+    color: var(--nova-color-text-muted);
+    text-decoration: none;
+}
+
+.nova-mega__quick-link:hover {
+    color: var(--nova-color-accent);
+}
+
+@include nova-below(lg) {
+    .nova-mega__groups {
+        grid-template-columns: repeat(3, 1fr);
+        row-gap: var(--nova-space-lg);
+    }
+}

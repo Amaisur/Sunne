@@ -1,0 +1,47 @@
+// Cross-cutting responsive tuning. Component-level breakpoint rules live
+// next to their component (see _header.scss, _hero.scss, etc.) - this file
+// only holds adjustments that apply across the whole page shell.
+
+:root {
+    --nova-gutter: 16px;
+}
+
+@include nova-above(sm) {
+    :root {
+        --nova-gutter: 20px;
+    }
+}
+
+@include nova-above(md) {
+    :root {
+        --nova-gutter: 24px;
+        --nova-space-xl: 96px;
+        --nova-space-2xl: 140px;
+    }
+}
+
+@include nova-above(lg) {
+    :root {
+        --nova-gutter: 32px;
+    }
+}
+
+@include nova-above(xl) {
+    :root {
+        --nova-header-height: 96px;
+    }
+}
+
+// Section head layout: stack on small screens, row on larger ones.
+.nova-section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nova-space-xs);
+}
+
+@include nova-above(sm) {
+    .nova-section-head {
+        flex-direction: row;
+        align-items: baseline;
+    }
+}

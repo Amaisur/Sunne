@@ -1,0 +1,243 @@
+// Desktop header: topbar (language), main bar (logo / nav / controls),
+// sticky + transparent-over-hero -> solid-on-scroll transition.
+// State classes (.is-solid / .is-scrolled) are toggled by
+// js/modules/sticky-header.js.
+
+.nova-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--nova-z-header);
+    width: 100%;
+    background-color: transparent;
+    color: var(--nova-color-text);
+    transition: background-color var(--nova-transition-slow), box-shadow var(--nova-transition-slow), color var(--nova-transition-slow);
+}
+
+.nova-header.is-solid {
+    background-color: var(--nova-color-bg);
+    box-shadow: 0 1px 0 var(--nova-color-border);
+}
+
+// Only pages that render a hero (the homepage) start transparent; every
+// other page gets `is-solid` immediately from sticky-header.js.
+.nova-header.is-transparent:not(.is-solid) {
+    color: #fff;
+
+    .nova-header__lang-toggle,
+    .nova-controls__link {
+        color: #fff;
+    }
+
+    .nova-header__burger span {
+        background-color: #fff;
+    }
+}
+
+.nova-header__topbar {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.nova-header.is-solid .nova-header__topbar {
+    border-bottom-color: var(--nova-color-border);
+}
+
+.nova-header__topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--nova-space-md);
+    min-height: 40px;
+    font-size: var(--nova-font-size-small);
+}
+
+.nova-header__lang {
+    position: relative;
+}
+
+.nova-header__lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: 0;
+    padding: 8px 4px;
+    cursor: pointer;
+    color: inherit;
+    font-size: inherit;
+}
+
+.nova-header__lang-panel,
+.nova-dropdown-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 200px;
+    background: var(--nova-color-bg);
+    color: var(--nova-color-text);
+    border-radius: var(--nova-radius-md);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+    padding: var(--nova-space-xs);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity var(--nova-transition-base), transform var(--nova-transition-base), visibility var(--nova-transition-base);
+    z-index: var(--nova-z-mega-menu);
+}
+
+.nova-header__lang[data-nova-open] .nova-header__lang-panel,
+.nova-nav__item[data-nova-open] .nova-dropdown-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nova-header__lang-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--nova-radius-sm);
+    color: var(--nova-color-text);
+    text-decoration: none;
+}
+
+.nova-header__lang-option:hover,
+.nova-header__lang-option.is-active {
+    background-color: var(--nova-color-bg-alt);
+}
+
+.nova-header__main-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-lg);
+    min-height: var(--nova-header-height);
+    transition: min-height var(--nova-transition-base);
+}
+
+.nova-header.is-scrolled .nova-header__main-inner {
+    min-height: var(--nova-header-height-scrolled);
+}
+
+.nova-header__logo {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.nova-header__logo-img {
+    height: 32px;
+    width: auto;
+    display: block;
+}
+
+.nova-nav {
+    flex: 1;
+    display: none;
+}
+
+.nova-nav__list {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-md);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nova-nav__item {
+    position: static;
+}
+
+.nova-nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: 0;
+    padding: 12px 4px;
+    font-size: var(--nova-font-size-body);
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.nova-nav__item[data-nova-open] .nova-icon--chevron {
+    transform: rotate(180deg);
+}
+
+.nova-header__controls {
+    flex-shrink: 0;
+}
+
+.nova-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-sm);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nova-controls__link {
+    position: relative;
+    display: inline-flex;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nova-controls__badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--nova-color-accent);
+    color: #fff;
+    font-size: 0.625rem;
+    line-height: 16px;
+    text-align: center;
+}
+
+.nova-searchbox {
+    background-color: var(--nova-color-bg);
+    color: var(--nova-color-text);
+    border-top: 1px solid var(--nova-color-border);
+}
+
+.nova-searchbox .nova-container {
+    padding-block: var(--nova-space-sm);
+}
+
+.nova-header__burger {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+}
+
+.nova-header__burger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background-color: currentColor;
+    border-radius: 1px;
+    transition: background-color var(--nova-transition-base);
+}
+
+@include nova-above(md) {
+    .nova-nav {
+        display: block;
+    }
+
+    .nova-header__burger {
+        display: none;
+    }
+}

@@ -1,0 +1,80 @@
+{% import "NovaTheme::macros.Helpers" as Helpers %}
+
+{#
+    Custom NovaTheme footer, injected into the "Ceres::Footer" container
+    (see src/Providers/FooterProvider.php). Ceres/PageDesign/Partials/
+    Footer.twig keeps rendering the "back to top" buttons itself outside
+    this container, so those are intentionally not duplicated here.
+
+    Legal links reuse the real, language-aware URLs Ceres already resolves
+    (urls.privacyPolicy, urls.legalDisclosure, urls.cancellationRights,
+    urls.gtc, urls.contact) - exactly like Ceres' own default footer - so
+    legal/compliance pages are never re-implemented or hardcoded.
+#}
+<div class="nova-footer">
+    {% if footer.groupLogos %}
+        <div class="nova-footer__group">
+            <div class="nova-container nova-footer__group-inner">
+                {% if footer.groupLabel %}<span class="nova-footer__group-label">{{ footer.groupLabel }}</span>{% endif %}
+                <ul class="nova-footer__group-logos">
+                    {% for brand in footer.groupLogos %}
+                        <li>
+                            <a href="{{ brand.url|default('#') }}">
+                                <img src="{{ plugin_path('NovaTheme') }}/images/{{ brand.image }}"
+                                     alt="{{ brand.name }} placeholder logo"
+                                     width="140" height="48" loading="lazy">
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="nova-container">
+        <div class="nova-footer__columns" data-nova-footer-accordion>
+            {% for column in footer.columns %}
+                <div class="nova-footer__column" data-footer-group>
+                    <button type="button" class="nova-footer__column-toggle" data-footer-toggle aria-expanded="false" aria-controls="nova-footer-col-{{ loop.index0 }}">
+                        {{ column.title }}
+                        <svg class="nova-icon nova-icon--chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                    </button>
+                    <ul class="nova-footer__column-list" id="nova-footer-col-{{ loop.index0 }}">
+                        {% for link in column.links %}
+                            <li><a href="{{ Helpers.linkUrl(link) }}">{{ link.label }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if footer.social %}
+            <ul class="nova-footer__social">
+                {% for social in footer.social %}
+                    <li>
+                        <a href="{{ social.url }}" aria-label="{{ social.label }}" rel="noopener" target="_blank">
+                            <span class="nova-icon nova-icon--social" data-social-icon="{{ social.icon }}" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="nova-footer__legal">
+            {% autoescape false %}
+                <a href="{{ urls.cancellationRights }}">{{ trans("Ceres::Template.footerCancellationRight", {"hyphen": ""}) }}</a>
+                <a href="{{ urls.cancellationForm }}">{{ trans("Ceres::Template.footerCancellationForm", {"hyphen": ""}) }}</a>
+                <a href="{{ urls.legalDisclosure }}">{{ trans("Ceres::Template.footerLegalDisclosure") }}</a>
+                <a href="{{ urls.privacyPolicy }}">{{ trans("Ceres::Template.footerPrivacyPolicy", {"hyphen": ""}) }}</a>
+                <a href="{{ urls.declarationOfAccessibility }}">{{ trans("Ceres::Template.footerDeclarationOfAccessibility", {"hyphen": ""}) }}</a>
+                <a href="{{ urls.gtc }}">{{ trans("Ceres::Template.footerGtc") }}</a>
+                <a href="{{ footer.sitemapUrl|default('#') }}">{{ trans('NovaTheme::NovaTheme.sitemap') }}</a>
+                {% if (config("Ceres.contact.shop_mail")|length > 0 and config("Ceres.contact.shop_mail") != "your@email.com") or config('IO.routing.category_contact') > 0 %}
+                    <a href="{{ urls.contact }}">{{ trans("Ceres::Template.footerContact") }}</a>
+                {% endif %}
+            {% endautoescape %}
+        </div>
+
+        <p class="nova-footer__copyright">&copy; {{ "now"|date("Y") }} {{ webstoreConfig.storeName|default('') }}. {{ trans("Ceres::Template.footerAllRightsReserved") }}</p>
+    </div>
+</div>

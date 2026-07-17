@@ -1,0 +1,79 @@
+// Two large promotional tiles under the hero.
+
+.nova-promo {
+    padding-block: var(--nova-space-xl);
+}
+
+.nova-promo__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--nova-space-md);
+}
+
+.nova-promo__card {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--nova-radius-lg);
+    overflow: hidden;
+    text-decoration: none;
+    color: #fff;
+}
+
+.nova-promo__media,
+.nova-promo__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.nova-promo__img {
+    object-fit: cover;
+    transition: transform var(--nova-transition-slow);
+}
+
+.nova-promo__card:hover .nova-promo__img,
+.nova-promo__card:focus-visible .nova-promo__img {
+    transform: scale(1.06);
+}
+
+.nova-promo__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.nova-promo__copy {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: var(--nova-space-lg);
+}
+
+.nova-promo__card--center .nova-promo__copy {
+    text-align: center;
+}
+
+.nova-promo__card--right .nova-promo__copy {
+    text-align: right;
+}
+
+.nova-promo__heading {
+    font-size: var(--nova-font-size-h2);
+    font-weight: 700;
+    margin: 4px 0 0;
+    color: #fff;
+}
+
+@include nova-above(md) {
+    .nova-promo__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--nova-space-lg);
+    }
+
+    .nova-promo__card {
+        aspect-ratio: 3 / 2;
+    }
+}

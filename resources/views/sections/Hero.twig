@@ -1,0 +1,81 @@
+{% import "NovaTheme::macros.Helpers" as Helpers %}
+
+{#
+    Full-width hero slider.
+    - First slide's image is eager + fetchpriority="high" for LCP; all
+      others are lazy-loaded and only mounted once js/modules/hero-slider.js
+      initialises (guarded by data-nova-hero so this degrades to a static,
+      fully server-rendered first slide if JS fails to load).
+    - Autoplay/pause-on-hover/swipe/keyboard/reduced-motion handled in JS.
+#}
+<section class="nova-hero" data-nova-hero aria-roledescription="carousel" aria-label="Featured products">
+    <div class="nova-hero__track" data-nova-hero-track>
+        {% for slide in heroSlides %}
+            <div class="nova-hero__slide{% if loop.first %} is-active{% endif %}"
+                 data-hero-slide
+                 role="group"
+                 aria-roledescription="slide"
+                 aria-label="{{ loop.index }} of {{ heroSlides|length }}"
+                 {% if not loop.first %}aria-hidden="true"{% endif %}>
+
+                {% set slideHref = slide.slideIsLink ? Helpers.linkUrl(slide) : null %}
+
+                <picture class="nova-hero__media">
+                    <source media="(max-width: 767px)" srcset="{{ plugin_path('NovaTheme') }}/images/{{ slide.imageMobile }}">
+                    <img
+                        src="{{ plugin_path('NovaTheme') }}/images/{{ slide.imageDesktop }}"
+                        alt="{{ slide.imageAlt|default('') }}"
+                        width="1920" height="800"
+                        {% if loop.first %}
+                            loading="eager" fetchpriority="high" decoding="async"
+                        {% else %}
+                            loading="lazy" decoding="async"
+                        {% endif %}
+                        class="nova-hero__img">
+                </picture>
+
+                <div class="nova-hero__overlay"></div>
+
+                <div class="nova-container nova-hero__content">
+                    <div class="nova-hero__copy">
+                        {% if loop.first %}
+                            <h1 class="nova-hero__heading">{{ slide.heading }}</h1>
+                        {% else %}
+                            <p class="nova-hero__heading">{{ slide.heading }}</p>
+                        {% endif %}
+                        {% if slide.subheading %}
+                            <p class="nova-hero__subheading">{{ slide.subheading }}</p>
+                        {% endif %}
+                        {% if slide.primaryLinkLabel %}
+                            <a class="nova-btn nova-btn--primary nova-hero__cta" href="{{ Helpers.linkUrl(slide) }}">
+                                {{ slide.primaryLinkLabel }}
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if slideHref %}
+                    <a class="nova-hero__slide-link" href="{{ slideHref }}" aria-label="{{ slide.heading }}"></a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <button type="button" class="nova-hero__arrow nova-hero__arrow--prev" data-nova-hero-prev aria-label="Previous slide">
+        <svg class="nova-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
+    <button type="button" class="nova-hero__arrow nova-hero__arrow--next" data-nova-hero-next aria-label="Next slide">
+        <svg class="nova-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
+
+    <div class="nova-hero__pagination" data-nova-hero-pagination role="tablist" aria-label="Slide pagination">
+        {% for slide in heroSlides %}
+            <button type="button"
+                    role="tab"
+                    class="nova-hero__dot{% if loop.first %} is-active{% endif %}"
+                    aria-selected="{{ loop.first ? 'true' : 'false' }}"
+                    aria-label="Go to slide {{ loop.index }}"
+                    data-nova-hero-dot="{{ loop.index0 }}"></button>
+        {% endfor %}
+    </div>
+</section>

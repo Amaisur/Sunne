@@ -1,0 +1,22 @@
+{#
+    Custom NovaTheme homepage, injected into the "Ceres::Homepage" container
+    (see src/Providers/HomepageProvider.php). Ceres/Homepage/Homepage.twig
+    wraps whatever this renders inside <div id="page-body"> for us - the
+    surrounding <html>/<head>/<body>, header, footer, modals and Vue app
+    bootstrapping all stay exactly as Ceres/PageDesign.twig defines them.
+
+    Section order matches the brief: hero -> promo tiles -> company intro
+    -> insights -> contact. Floating actions + the contact modal are scoped
+    to the homepage only, per the instruction not to change the layout of
+    any other page type.
+#}
+<main id="nova-main-content" class="nova-home">
+    {% include "NovaTheme::sections.Hero" %}
+    {% include "NovaTheme::sections.PromoTiles" %}
+    {% include "NovaTheme::sections.CompanyIntro" %}
+    {% include "NovaTheme::sections.Insights" %}
+    {% include "NovaTheme::sections.Contact" %}
+</main>
+
+{% include "NovaTheme::partials.FloatingActions" %}
+{% include "NovaTheme::partials.ContactModal" %}

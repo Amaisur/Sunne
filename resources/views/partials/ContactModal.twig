@@ -1,0 +1,68 @@
+{#
+    Accessible contact modal. Opened by any element with
+    data-nova-modal-trigger="nova-contact-modal" (the Contact section button
+    and, optionally, the "Contact Us" floating action). Behaviour - focus
+    trap, Escape close, overlay close, validation, loading/success states -
+    lives in js/modules/contact-modal.js.
+
+    The submit target is fully configurable via ContentConfig::contact()
+    ["formActionUrl"] - no credentials or API keys are stored here. Point it
+    at a PlentyONE contact-mail form handler / your own endpoint.
+#}
+<div class="nova-modal" id="nova-contact-modal" data-nova-modal aria-hidden="true">
+    <div class="nova-modal__overlay" data-nova-modal-overlay></div>
+
+    <div class="nova-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="nova-contact-modal-title">
+        <button type="button" class="nova-modal__close" data-nova-modal-close aria-label="Close contact form">
+            <svg class="nova-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+
+        <div class="nova-modal__body" data-nova-modal-body>
+            <h2 class="nova-modal__title" id="nova-contact-modal-title">{{ contact.primaryButtonLabel|default('Contact Us') }}</h2>
+
+            <form class="nova-form" data-nova-contact-form novalidate
+                  data-form-action="{{ contact.formActionUrl|default('#') }}"
+                  data-msg-required="{{ trans('NovaTheme::NovaTheme.formErrorRequired') }}"
+                  data-msg-email="{{ trans('NovaTheme::NovaTheme.formErrorEmail') }}"
+                  data-msg-generic="{{ trans('NovaTheme::NovaTheme.formErrorGeneric') }}">
+                {% for field in contactModalFields %}
+                    <div class="nova-form__field" data-nova-field>
+                        <label class="nova-form__label" for="nova-field-{{ field.name }}">
+                            {{ field.label }}{% if field.required %}<span aria-hidden="true"> *</span>{% endif %}
+                        </label>
+
+                        {% if field.type == 'textarea' %}
+                            <textarea
+                                class="nova-form__input"
+                                id="nova-field-{{ field.name }}"
+                                name="{{ field.name }}"
+                                rows="4"
+                                {% if field.required %}required aria-required="true"{% endif %}
+                                aria-describedby="nova-field-{{ field.name }}-error"></textarea>
+                        {% else %}
+                            <input
+                                class="nova-form__input"
+                                type="{{ field.type }}"
+                                id="nova-field-{{ field.name }}"
+                                name="{{ field.name }}"
+                                autocomplete="{{ field.autocomplete|default('off') }}"
+                                {% if field.required %}required aria-required="true"{% endif %}
+                                aria-describedby="nova-field-{{ field.name }}-error">
+                        {% endif %}
+
+                        <p class="nova-form__error" id="nova-field-{{ field.name }}-error" role="alert" hidden></p>
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="nova-btn nova-btn--primary nova-form__submit">
+                    <span class="nova-form__submit-label">{{ trans('NovaTheme::NovaTheme.contactFormSubmit') }}</span>
+                    <span class="nova-form__spinner" aria-hidden="true"></span>
+                </button>
+            </form>
+
+            <div class="nova-form__success" data-nova-form-success hidden role="status">
+                <p>{{ trans('NovaTheme::NovaTheme.contactFormSuccess') }}</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+{
+    "name": "NovaTheme",
+    "namespace": "NovaTheme",
+    "type": "template",
+    "version": "1.0.0",
+    "license": "UNLICENSED",
+    "price": 0.00,
+    "description": "Custom homepage and header design for PlentyONE/Ceres shops, inspired by a modern B2B manufacturer layout (hero slider, mega menu, promo tiles, insights, contact section, footer, floating actions). Ships as a content-only add-on plugin that layers into Ceres via layout containers - it does not replace or fork Ceres.",
+    "shortDescription": {
+        "de": "Individuelle Startseite und Header fuer PlentyONE/Ceres Shops",
+        "en": "Custom homepage and header for PlentyONE/Ceres shops"
+    },
+    "author": "Client",
+    "authorIcon": "icon_author_xs.png",
+    "pluginIcon": "icon_plugin_xs.png",
+    "email": "dev@example.com",
+    "keywords": ["plentymarkets", "ceres", "template", "homepage", "header", "theme"],
+    "require": {
+        "IO": ">=5.0.0",
+        "Ceres": ">=5.0.0"
+    },
+    "platform": {
+        "php": ">=7.3 <8.4"
+    },
+    "serviceProvider": "NovaTheme\\Providers\\NovaThemeServiceProvider",
+    "javaScriptFiles": [],
+    "containers": [],
+    "dataProviders": [
+        {
+            "key": "NovaTheme\\Providers\\HeaderProvider",
+            "name": "NovaTheme header",
+            "description": "Renders the custom NovaTheme header (desktop navigation, products mega menu, mobile drawer) in place of the default Ceres header.",
+            "defaultLayoutContainer": "Ceres::Header"
+        },
+        {
+            "key": "NovaTheme\\Providers\\HomepageProvider",
+            "name": "NovaTheme homepage",
+            "description": "Renders the custom NovaTheme homepage (hero slider, promo tiles, company introduction, insights, contact section, floating actions) in place of the default Ceres marketing homepage.",
+            "defaultLayoutContainer": "Ceres::Homepage"
+        },
+        {
+            "key": "NovaTheme\\Providers\\FooterProvider",
+            "name": "NovaTheme footer",
+            "description": "Renders the custom NovaTheme footer (group branding, link columns, legal row, social links) in place of the default Ceres footer.",
+            "defaultLayoutContainer": "Ceres::Footer"
+        },
+        {
+            "key": "NovaTheme\\Providers\\StyleProvider",
+            "name": "NovaTheme stylesheet",
+            "description": "Includes the compiled NovaTheme stylesheet in the document head.",
+            "defaultLayoutContainer": "Ceres::Template.Style"
+        },
+        {
+            "key": "NovaTheme\\Providers\\ScriptProvider",
+            "name": "NovaTheme scripts",
+            "description": "Includes the NovaTheme JavaScript modules (sticky header, mega menu, mobile drawer, hero slider, contact modal, footer accordion, floating actions).",
+            "defaultLayoutContainer": "Ceres::Script.AfterScriptsLoaded"
+        }
+    ],
+    "dependencies": ["Ceres"],
+    "runOnBuild": []
+}

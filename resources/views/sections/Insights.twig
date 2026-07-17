@@ -1,0 +1,37 @@
+{% import "NovaTheme::macros.Helpers" as Helpers %}
+
+{#
+    Insights & Guides. plentyMarkets/Ceres has no built-in blog module, so
+    each card links to a real Content-type category when "categoryId" is
+    set (see ContentConfig::insights()) and otherwise falls back to a
+    static placeholder link. Desktop: 4-up grid. Mobile: CSS scroll-snap
+    row, no JS required.
+#}
+<section class="nova-insights">
+    <div class="nova-container">
+        <div class="nova-section-head">
+            <h2 class="nova-section-head__title">{{ trans('NovaTheme::NovaTheme.insightsHeading') }}</h2>
+        </div>
+
+        <div class="nova-insights__row">
+            {% for article in insights %}
+                <a class="nova-insights__card" href="{{ Helpers.linkUrl(article) }}" data-nova-reveal>
+                    <div class="nova-insights__media">
+                        <img src="{{ plugin_path('NovaTheme') }}/images/{{ article.image }}"
+                             alt="{{ article.imageAlt|default('') }}"
+                             width="480" height="320"
+                             loading="lazy" decoding="async"
+                             class="nova-insights__img">
+                    </div>
+                    <div class="nova-insights__body">
+                        {% if article.category %}<span class="nova-label">{{ article.category }}</span>{% endif %}
+                        <h3 class="nova-insights__title">{{ article.title }}</h3>
+                        {% if article.date %}
+                            <time class="nova-insights__date" datetime="{{ article.date }}">{{ article.date|date('F j, Y') }}</time>
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>

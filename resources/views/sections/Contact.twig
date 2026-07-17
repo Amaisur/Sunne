@@ -1,0 +1,42 @@
+{#
+    Dark / image-backed contact + trust section. The primary button opens
+    the accessible contact modal (partials/ContactModal.twig) rather than
+    navigating away.
+#}
+<section class="nova-contact">
+    {% if contact.backgroundImage %}
+        <img src="{{ plugin_path('NovaTheme') }}/images/{{ contact.backgroundImage }}"
+             alt="{{ contact.backgroundImageAlt|default('') }}"
+             width="1920" height="960"
+             loading="lazy" decoding="async"
+             class="nova-contact__bg">
+        <div class="nova-contact__overlay"></div>
+    {% endif %}
+
+    <div class="nova-container nova-contact__inner" data-nova-reveal>
+        <h2 class="nova-contact__heading">{{ contact.heading }}</h2>
+        {% if contact.subheading %}<p class="nova-contact__subheading">{{ contact.subheading }}</p>{% endif %}
+        {% if contact.description %}<p class="nova-contact__description">{{ contact.description }}</p>{% endif %}
+
+        <div class="nova-contact__actions">
+            <button type="button" class="nova-btn nova-btn--primary" data-nova-modal-trigger="nova-contact-modal">
+                {{ contact.primaryButtonLabel }}
+            </button>
+            {% if contact.secondaryLinkLabel %}
+                <a class="nova-contact__secondary-link" href="{{ contact.secondaryLinkUrl|default('#') }}">{{ contact.secondaryLinkLabel }}</a>
+            {% endif %}
+        </div>
+
+        {% if contact.social %}
+            <ul class="nova-contact__social">
+                {% for social in contact.social %}
+                    <li>
+                        <a href="{{ social.url }}" aria-label="{{ social.label }}" rel="noopener" target="_blank">
+                            <span class="nova-icon nova-icon--social" data-social-icon="{{ social.icon }}" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</section>

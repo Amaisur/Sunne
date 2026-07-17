@@ -1,0 +1,22 @@
+{% import "NovaTheme::macros.Helpers" as Helpers %}
+
+{# Full-width, image-led company introduction section. #}
+<section class="nova-intro">
+    <div class="nova-intro__media">
+        <img src="{{ plugin_path('NovaTheme') }}/images/{{ companyIntro.image }}"
+             alt="{{ companyIntro.imageAlt|default('') }}"
+             width="1920" height="900"
+             loading="lazy" decoding="async"
+             class="nova-intro__img">
+        <div class="nova-intro__overlay"></div>
+    </div>
+    <div class="nova-container">
+        <div class="nova-intro__copy" data-nova-reveal>
+            <h2 class="nova-intro__heading">{{ companyIntro.heading }}</h2>
+            <p class="nova-intro__description">{{ companyIntro.description }}</p>
+            {% if companyIntro.buttonLabel %}
+                <a class="nova-btn nova-btn--secondary" href="{{ Helpers.linkUrl(companyIntro) }}">{{ companyIntro.buttonLabel }}</a>
+            {% endif %}
+        </div>
+    </div>
+</section>

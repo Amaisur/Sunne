@@ -1,0 +1,48 @@
+// Full-width image-led company introduction section.
+// Not explicitly named in the brief's SCSS list but split out for the same
+// modularity reason as every other section partial.
+
+.nova-intro {
+    position: relative;
+    padding-block: var(--nova-space-2xl);
+    color: #fff;
+    overflow: hidden;
+}
+
+.nova-intro__media {
+    position: absolute;
+    inset: 0;
+}
+
+.nova-intro__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.nova-intro__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 12, 14, 0.5);
+}
+
+.nova-intro__copy {
+    position: relative;
+    max-width: 640px;
+    margin-inline: auto;
+    text-align: center;
+}
+
+.nova-intro__heading {
+    font-size: var(--nova-font-size-h2);
+    font-weight: 700;
+    margin: 0 0 var(--nova-space-sm);
+    color: #fff;
+}
+
+.nova-intro__description {
+    font-size: 1.0625rem;
+    line-height: var(--nova-line-height-body);
+    color: rgba(255, 255, 255, 0.88);
+    margin: 0 0 var(--nova-space-md);
+}

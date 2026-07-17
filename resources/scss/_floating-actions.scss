@@ -1,0 +1,94 @@
+// Fixed vertical floating action bar (homepage only).
+
+.nova-floating-actions {
+    position: fixed;
+    right: var(--nova-space-sm);
+    bottom: var(--nova-space-sm);
+    z-index: var(--nova-z-floating-actions);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nova-floating-actions__item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--nova-color-bg);
+    color: var(--nova-color-text);
+    border: 1px solid var(--nova-color-border);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--nova-transition-fast), transform var(--nova-transition-fast);
+}
+
+.nova-floating-actions__item:hover {
+    background-color: var(--nova-color-accent);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.nova-floating-actions__label {
+    font-size: 0.5625rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1;
+}
+
+.nova-floating-actions__count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background-color: var(--nova-color-accent);
+    color: #fff;
+    font-size: 0.625rem;
+    line-height: 18px;
+    text-align: center;
+}
+
+// Tooltip shown on hover/focus (desktop only, to avoid obscuring content on touch)
+.nova-floating-actions__item::after {
+    content: attr(data-nova-tooltip);
+    position: absolute;
+    right: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--nova-color-text);
+    color: #fff;
+    font-size: var(--nova-font-size-small);
+    white-space: nowrap;
+    padding: 6px 10px;
+    border-radius: var(--nova-radius-sm);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity var(--nova-transition-fast);
+    z-index: var(--nova-z-tooltip);
+}
+
+.nova-floating-actions__item:hover::after,
+.nova-floating-actions__item:focus-visible::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+@include nova-below(sm) {
+    .nova-floating-actions__item--desktop-only {
+        display: none;
+    }
+
+    .nova-floating-actions__item::after {
+        display: none;
+    }
+}

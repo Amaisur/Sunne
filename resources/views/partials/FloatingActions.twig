@@ -1,0 +1,32 @@
+{#
+    Fixed vertical floating action bar (homepage only - see Homepage.twig).
+    "contact" opens the real contact modal below. "inquiry" / "compare" are
+    not core Ceres features (no bundled RFQ/compare module ships with
+    Ceres), so they render as configurable links/placeholders here - wire
+    action.url up to a real inquiry/compare plugin's route if one is
+    installed. See ContentConfig::floatingActions().
+#}
+<div class="nova-floating-actions" data-nova-floating-actions>
+    {% for action in floatingActions %}
+        {% if action.action == 'modal' %}
+            <button type="button"
+                    class="nova-floating-actions__item{% if not action.mobileVisible %} nova-floating-actions__item--desktop-only{% endif %}"
+                    data-nova-modal-trigger="nova-contact-modal"
+                    data-nova-tooltip="{{ action.tooltip }}">
+                <span class="nova-icon nova-icon--action" data-action-icon="{{ action.icon }}" aria-hidden="true"></span>
+                <span class="nova-floating-actions__label">{{ action.label }}</span>
+            </button>
+        {% else %}
+            <a href="{{ action.url|default('#') }}"
+               class="nova-floating-actions__item{% if not action.mobileVisible %} nova-floating-actions__item--desktop-only{% endif %}"
+               data-nova-tooltip="{{ action.tooltip }}"
+               data-nova-action="{{ action.key }}">
+                <span class="nova-icon nova-icon--action" data-action-icon="{{ action.icon }}" aria-hidden="true"></span>
+                <span class="nova-floating-actions__label">{{ action.label }}</span>
+                {% if action.showCount %}
+                    <span class="nova-floating-actions__count" data-nova-count="{{ action.key }}">0</span>
+                {% endif %}
+            </a>
+        {% endif %}
+    {% endfor %}
+</div>
